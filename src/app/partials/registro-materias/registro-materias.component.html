@@ -1,0 +1,85 @@
+<div class="wrapper">
+    <!-- Va a englobar todo el formulario con la cabecera -->
+    <div class="section-registro">
+        <div class="body-registro">
+          <div class="row mt-3 mb-3">
+            <div class="form-group col-12">
+              <label class="title-user" for="tipo_usuario">Ingresa los datos de la MATERIA</label>
+            </div>
+          </div>
+          <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>NRC 5 digitos</mat-label>
+              <input matInput [(ngModel)]="materia.nrc" mask='00000' placeholder="Escribe el nrc">
+          </mat-form-field>
+          <div *ngIf="errors.nrc" class="invalid-feedback">{{ errors.nrc }}</div>
+  
+          <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Nombre Materia</mat-label>
+              <input matInput [(ngModel)]="materia.nombre_materia" placeholder="Escribe nombre">
+          </mat-form-field>
+          <div *ngIf="errors.nombre_materia" class="invalid-feedback">{{ errors.nombre_materia }}</div>
+  
+          <mat-form-field class="mat-input" appearance="outline">
+              <mat-label>Seccion 3 digitos</mat-label>
+              <input matInput [(ngModel)]="materia.seccion" mask='000' placeholder="Escribe seccion">
+          </mat-form-field>
+          <div *ngIf="errors.seccion" class="invalid-feedback">{{ errors.seccion }}</div>
+            <!--TO DO AQUI VA LO DEL JSON DIAS, RECUERDA QUE ES DIFERENTE-->
+          
+            <!--FIN DEL TO DO-->
+            <div class="select-dias">
+                <div class="row mt-3 mb-3">
+                  <div class="form-group col-12">
+                    <label class="title-dias" for="tipo_usuario">Selecciona los dias</label>
+                  </div>
+                </div>
+                <div class="checkbox-group" *ngFor="let dia of dias; let i = index">
+                  <mat-checkbox class="checkbox-item opc-sc" name="opsc" (change)="checkboxChange($event)" value="{{dia.nombre}}" [checked]="revisarSeleccion(dia.nombre)"  >
+                      <div class="d-checkbox-nombre">{{dia.nombre}}</div>
+                  </mat-checkbox>
+                </div>
+              </div>
+            <!--HORA INICIO, RECUERDA QUE ES METER EL RELOJ-->
+            <mat-form-field class="mat-input" appearance="outline">
+                <mat-label>Hora Inicio</mat-label>
+                <input matInput placeholder="Time" [ngxTimepicker]="picker" type="string" [(ngModel)]="materia.horai">
+                <ngx-material-timepicker #picker></ngx-material-timepicker>
+            </mat-form-field>
+            <div *ngIf="errors.horai" class="invalid-feedback">{{ errors.horai }}</div>
+
+            <mat-form-field class="mat-input" appearance="outline">
+                <mat-label>Hora Final</mat-label>
+                <input matInput placeholder="Time" [ngxTimepicker]="picker1" type="string" [(ngModel)]="materia.horaf">
+                <ngx-material-timepicker #picker1></ngx-material-timepicker>
+            </mat-form-field>
+            <div *ngIf="errors.horaf" class="invalid-feedback">{{ errors.horaf }}</div>
+        <!-- FIN DE LO DE LAS HORAS, SON 2 INPUT UNO PARA HORA INICIO Y OTRA PARA FINAL-->
+
+          <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>Salon</mat-label>
+            <input matInput [(ngModel)]="materia.salon" placeholder="Escribe salon">
+          </mat-form-field>
+          <div *ngIf="errors.salon" class="invalid-feedback">{{ errors.salon }}</div>
+
+          <!--PROGRAMA EDUCATIVO, ES CON UN MAT SELECT, IR CHECANDO Y HACIENDO-->
+  
+          <mat-form-field class="mat-input" appearance="outline">
+            <mat-label>Programa educativo</mat-label>
+            <mat-select [(ngModel)]="materia.programa_educativo">
+              <mat-option *ngFor="let pro of pros" [value]="pro.viewValue">
+                {{pro.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="errors.programa_educativo" class="invalid-feedback">{{ errors.programa_educativo }}</div>
+  
+  
+          <div class="section-buttons">
+              <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
+              <button *ngIf="!editar" class="btn btn-primary" type="submit" (click)="registrar()">Registrar</button>
+              <button *ngIf="editar" class="btn btn-primary" type="submit" (click)="actualizar()">Actualizar</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  

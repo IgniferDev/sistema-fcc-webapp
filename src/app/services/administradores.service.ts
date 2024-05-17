@@ -109,7 +109,7 @@ export class AdministradoresService {
   public obtenerListaAdmins (): Observable <any>{
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+token});
-    return this.http.get<any>(`${environment.url_api}/lista-admins/`, {headers:headers});
+    return this.http.get<any>(`${environment.url_api}/lista-admin/`, {headers:headers});
   }
 
   //Obtener un solo usuario dependiendo su ID

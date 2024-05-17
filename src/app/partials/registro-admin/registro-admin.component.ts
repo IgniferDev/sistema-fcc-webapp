@@ -3,6 +3,8 @@ import { AdministradoresService } from '../../services/administradores.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 
 //Para poder usar jquery definir esto
 declare var $:any;
@@ -31,6 +33,7 @@ export class RegistroAdminComponent implements OnInit{
   constructor(
     private location : Location,
     private router: Router,
+    private dialog: MatDialog,
     public activatedRoute: ActivatedRoute,
     private administradoresService: AdministradoresService,
     private facadeService: FacadeService
@@ -89,7 +92,25 @@ export class RegistroAdminComponent implements OnInit{
   }
 
   public actualizar(){
-    //Validación
+
+    const dialogRef = this.dialog.open(EditarUserModalComponent,{
+      data: {rol: 'administrador',admin: this.admin, editar: this.editar},
+      //data: {al: alumno, rol: 'alumno'}, //Se pasan valores a través del componente
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.isDelete){
+        console.log("Admin eliminado");
+        //Recargar página
+        window.location.reload();
+      }else{
+        alert("Admin no eliminado ");
+        console.log("No se eliminó el admin");
+      }
+    });
+    /*//Validación
     this.errors = [];
 
     this.errors = this.administradoresService.validarAdmin(this.admin, this.editar);
@@ -107,7 +128,7 @@ export class RegistroAdminComponent implements OnInit{
       }, (error)=>{
         alert("No se pudo editar el administrador");
       }
-    );
+    );*/
   }
 
   //Funciones para password

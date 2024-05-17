@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { MaestrosService } from 'src/app/services/maestros.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FacadeService } from 'src/app/services/facade.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarUserModalComponent } from 'src/app/modals/editar-user-modal/editar-user-modal.component';
 declare var $:any;
 
 @Component({
@@ -54,6 +56,7 @@ export class RegistroMaestrosComponent implements OnInit{
     private location : Location,
     private maestrosService: MaestrosService,
     private router: Router,
+    private dialog: MatDialog,
     public activatedRoute: ActivatedRoute,
     private facadeService: FacadeService
   ){
@@ -148,7 +151,24 @@ export class RegistroMaestrosComponent implements OnInit{
   }
 
   public actualizar(){
-    //Validación
+    const dialogRef = this.dialog.open(EditarUserModalComponent,{
+      data: {rol: 'maestro',maestro: this.maestro, editar: this.editar},
+      //data: {al: alumno, rol: 'alumno'}, //Se pasan valores a través del componente
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.isDelete){
+        console.log("maestro eliminado");
+        //Recargar página
+        window.location.reload();
+      }else{
+        alert("Maestri no eliminado ");
+        console.log("No se eliminó el maestro");
+      }
+    });
+    /*//Validación
     this.errors = [];
 
     this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
@@ -166,7 +186,7 @@ export class RegistroMaestrosComponent implements OnInit{
       }, (error)=>{
         alert("No se pudo editar el maestro");
       }
-    );
+    );*/
   }
 
   public checkboxChange(event:any){
@@ -183,7 +203,7 @@ export class RegistroMaestrosComponent implements OnInit{
     }
     console.log("Array materias: ", this.maestro);
   }
-
+//TODO CHECAR IMPORTANTE SI NO HAY CONFUSION CON MATERIAS Y MATERIAS_JSON
   public revisarSeleccion(nombre: string){
     if(this.maestro.materias_json){
       var busqueda = this.maestro.materias_json.find((element)=>element==nombre);

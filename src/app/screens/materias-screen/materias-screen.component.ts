@@ -4,33 +4,39 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { EliminarUserModalComponent } from 'src/app/modals/eliminar-user-modal/eliminar-user-modal.component';
-import { AlumnosService } from 'src/app/services/alumnos.service';
 import { FacadeService } from 'src/app/services/facade.service';
+import { MateriasService } from 'src/app/services/materias.service';
 
 @Component({
-  selector: 'app-alumnos-screen',
-  templateUrl: './alumnos-screen.component.html',
-  styleUrls: ['./alumnos-screen.component.scss']
+  selector: 'app-materias-screen',
+  templateUrl: './materias-screen.component.html',
+  styleUrls: ['./materias-screen.component.scss']
 })
-export class AlumnosScreenComponent implements OnInit{
+export class MateriasScreenComponent implements OnInit {
 
   public name_user:string = "";
   public rol:string = "";
   public token : string = "";
-  public lista_alumnos: any[] = [];
+  public lista_materias: any[] = [];
 
   //Para la tabla
-  displayedColumns: string[] = ['matricula', 'nombre', 'email', 'fecha_nacimiento', 'edad', 'curp', 'rfc', 'telefono', 'ocupacion', 'editar', 'eliminar'];
-  dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
+  displayedColumns: string[] = ['nrc', 'nombre_materia', 'seccion', 'dias_json', 'horai', 'horaf', 'salon', 'programa_educativo','editar', 'eliminar'];
+  //displayedColumns2: string[] = ['nrc', 'nombre_materia', 'seccion', 'dias_json', 'horai', 'horaf', 'salon', 'programa_educativo'];
+  dataSource = new MatTableDataSource<DatosUsuario>(this.lista_materias as DatosUsuario[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   constructor(
     public facadeService: FacadeService,
-    private alumnosService:AlumnosService,
+    public materiasService: MateriasService,
     private router: Router,
     public dialog: MatDialog
-  ){}
+  ){
+  }
 
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
@@ -39,14 +45,31 @@ export class AlumnosScreenComponent implements OnInit{
     //Obtengo el token del login
     this.token = this.facadeService.getSessionToken();
     console.log("Token: ", this.token);
-
     if(this.token == ""){
       this.router.navigate([""]);
     }
-
-    this.obtenerAlumnos();
+    //Obtener materias
+    this.obtenerMaterias();
     //Para paginador
     this.initPaginator();
+  }
+
+  public obtenerMaterias(){
+    this.materiasService.obtenerListaMaterias().subscribe(
+      (response)=>{
+        this.lista_materias = response;
+        console.log("Lista materias: ", this.lista_materias);
+        if(this.lista_materias.length > 0){
+          //Agregar datos del nombre e email
+          
+          console.log("Materias: ", this.lista_materias);
+
+          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_materias as DatosUsuario[]);
+        }
+      }, (error)=>{
+        alert("No se pudo obtener la lista de materias");
+      }
+    );
   }
 
   //Para paginación
@@ -73,67 +96,50 @@ export class AlumnosScreenComponent implements OnInit{
     //this.dataSourceIngresos.paginator = this.paginator;
   }
 
-  //Obtener alumnos
-  public obtenerAlumnos(){
-    this.alumnosService.obtenerListaAlumnos().subscribe(
-      (response)=>{
-        this.lista_alumnos = response;
-        console.log("Lista users: ", this.lista_alumnos);
-        if(this.lista_alumnos.length > 0){
-          //Agregar datos del nombre e email
-          this.lista_alumnos.forEach(usuario => {
-            usuario.first_name = usuario.user.first_name;
-            usuario.last_name = usuario.user.last_name;
-            usuario.email = usuario.user.email;
-          });
-          console.log("Otro user: ", this.lista_alumnos);
-
-          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
-        }
-      }, (error)=>{
-        alert("No se pudo obtener la lista de usuarios");
-      }
-    );
-  }
-
-  //Funcion para editar
-  public goEditar(idUser: number){
-    this.router.navigate(["registro-usuarios/alumnos/"+idUser]);
-  }
-
-  public delete(idUser: number){
+  public delete(idMateria: number){
     const dialogRef = this.dialog.open(EliminarUserModalComponent,{
-      data: {id: idUser, rol: 'alumno'}, //Se pasan valores a través del componente
+      data: {id: idMateria, rol: 'materias'}, //Se pasan valores a través del componente
       height: '288px',
       width: '328px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result.isDelete){
-        console.log("Alumno eliminado");
+        console.log("Materia eliminado");
         //Recargar página
         window.location.reload();
       }else{
-        alert("Alumno no eliminado ");
-        console.log("No se eliminó el alumno");
+        alert("Materia no eliminado ");
+        console.log("No se eliminó el materia");
       }
     });
   }
-}//Cierre de la clase
 
-//Esto va fuera de la llave que cierra la clase
+ //Funcion para editar
+  public goEditar(idUser: number){
+    this.router.navigate(["registro-usuarios/materias/"+idUser]);
+  }
+
+  
+
+
+
+
+
+  
+}
+
 export interface DatosUsuario {
   id: number,
-  matricula: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  fecha_nacimiento: string,
-  curp: string,
-  rfc: string,
-  edad: number,
-  telefono: string,
-  ocupacion: string
+  nrc:string,
+  nombre_materia: string,
+  seccion: string,
+  dias_json: string,
+  horai: string,
+  horaf: string,
+  salon: string,
+  programa_educativo: string
 
 }
+
 

@@ -25,7 +25,7 @@ export class AlumnosService {
   public esquemaAlumno(){
     return {
       'rol':'',
-      'matricula': '',
+      'clave_alumno': '',
       'first_name': '',
       'last_name': '',
       'email': '',
@@ -45,8 +45,8 @@ export class AlumnosService {
     console.log("Validando alumno... ", data);
     let error: any = [];
 
-    if(!this.validatorService.required(data["matricula"])){
-      error["matricula"] = this.errorService.required;
+    if(!this.validatorService.required(data["clave_alumno"])){
+      error["clave_alumno"] = this.errorService.required;
     }
 
     if(!this.validatorService.required(data["first_name"])){
@@ -121,6 +121,10 @@ export class AlumnosService {
   //Servicio para registrar un nuevo alumno
   public registrarAlumno (data: any): Observable <any>{
     return this.http.post<any>(`${environment.url_api}/alumnos/`,data, httpOptions);
+  }
+
+  public getAlumnoByID(idUser: Number){
+    return this.http.get<any>(`${environment.url_api}/alumnos/?id=${idUser}`,httpOptions);
   }
 
   public obtenerListaAlumnos (): Observable <any>{

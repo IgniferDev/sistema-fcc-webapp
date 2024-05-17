@@ -42,9 +42,10 @@
             <div class="row mt-3" style="text-align: center;">
               <div class="form-group col-12">
                 <mat-radio-group [(ngModel)]="user.tipo_usuario" (change)="radioChange($event)" [disabled]="editar">
-                  <mat-radio-button value="administrador">Administrador</mat-radio-button>
-                  <mat-radio-button value="alumno">Alumno</mat-radio-button>
-                  <mat-radio-button value="maestro">Maestro</mat-radio-button>
+                  <mat-radio-button value="administrador" *ngIf= "rolo!='maestro' && rolo!= 'alumnos'" >Administrador</mat-radio-button>
+                  <mat-radio-button value="alumnos">Alumno</mat-radio-button>
+                  <mat-radio-button value="maestro" >Maestro</mat-radio-button>
+                  <mat-radio-button value="materias" *ngIf= "rolo!='maestro' && rolo!= 'alumnos' && rolo!='' ">Materia</mat-radio-button>
                 </mat-radio-group>
               </div>
             </div>
@@ -55,10 +56,13 @@
               <app-registro-admin [rol]="tipo_user" [datos_user]="user"></app-registro-admin>
             </section>
             <section class="registro-alumnos" *ngIf="isAlumno">
-              <app-registro-alumnos [rol]="tipo_user"></app-registro-alumnos>
+              <app-registro-alumnos [rol]="tipo_user" [datos_user]="user"></app-registro-alumnos>
             </section>
             <section class="registro-maestros" *ngIf="isMaestro">
               <app-registro-maestros [rol]="tipo_user" [datos_user]="user"></app-registro-maestros>
+            </section>
+            <section class="registro-materias" *ngIf="isMateria">
+              <app-registro-materias [rol]="tipo_user" [datos_user]="user"></app-registro-materias>
             </section>
           </section>
 

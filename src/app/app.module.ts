@@ -33,6 +33,14 @@ import { AlumnosScreenComponent } from './screens/alumnos-screen/alumnos-screen.
 import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-screen.component';
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
+import { RegistroMateriasComponent } from './partials/registro-materias/registro-materias.component';
+
+//reloj
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+//mask
+import { NgxMaskModule } from 'ngx-mask';
+import { MateriasScreenComponent } from './screens/materias-screen/materias-screen.component';
+import { EditarUserModalComponent } from './modals/editar-user-modal/editar-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +56,10 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     AlumnosScreenComponent,
     MaestrosScreenComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent
+    GraficasScreenComponent,
+    RegistroMateriasComponent,
+    MateriasScreenComponent,
+    EditarUserModalComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +78,11 @@ import { GraficasScreenComponent } from './screens/graficas-screen/graficas-scre
     HttpClientModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    //reloj
+    NgxMaterialTimepickerModule,
+    //mask
+    NgxMaskModule.forRoot(),
 
   ],
   providers: [],
